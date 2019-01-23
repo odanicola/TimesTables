@@ -17,6 +17,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     private TextView mTextMessage;
+    ListView myListView;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -38,6 +39,17 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
+    public void generateNumber(int progress){
+        ArrayList<String> arrProgress = new ArrayList<>();
+        arrProgress.clear();
+        for (int i = 1; i < 10 ; i++) {
+            arrProgress.add(Integer.toString(i*progress));
+        }
+
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, arrProgress);
+        myListView.setAdapter(arrayAdapter);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,22 +59,27 @@ public class MainActivity extends AppCompatActivity {
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
-        final ListView myListView = (ListView) findViewById(R.id.myListView);
+        myListView = (ListView) findViewById(R.id.myListView);
         SeekBar seekBar = (SeekBar) findViewById(R.id.seekBar);
-        final ArrayList<String> arrProgress = new ArrayList<>();
+        seekBar.setMax(20);
+        seekBar.setProgress(10);
+
+        generateNumber(10);
 
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                int mount = 9;
-                arrProgress.clear();
-                for (int j = 0; j < mount ; j++) {
-                    arrProgress.add(""+i);
-                    i++;
+                int min = 1;
+                int timeTables;
+
+                if(i<min){
+                    timeTables = min;
+                    seekBar.setProgress(min);
+                }else{
+                    timeTables = i;
                 }
 
-                ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_list_item_1, arrProgress);
-                myListView.setAdapter(arrayAdapter);
+                generateNumber(timeTables);
 
             }
 
